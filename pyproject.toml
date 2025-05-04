@@ -1,6 +1,6 @@
 [project]
 name = "mblog"
-version = "0.0.1"
+version = "0.0.2"
 description = "A micro blog website built using django."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -10,5 +10,13 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "djlint>=1.36.4",
     "ruff>=0.11.8",
 ]
+
+[tool.djlint]
+profile="django"
+blank_line_before_tag="load,extends,include,block"
+
+[tool.ruff.lint]
+extend-select = ["I"]
