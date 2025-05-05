@@ -1,7 +1,12 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from post.models import Post, PostStatusChoice
+from posts.models import Post, PostStatusChoice
+
+
+def view_posts(request):
+    posts = Post.objects.filter(status=PostStatusChoice.PUBLISHED)
+    return render(request, "post/view_posts.html", {"posts": posts})
 
 
 def view_post(request, post_id):

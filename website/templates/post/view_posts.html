@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Posts
+{% endblock title %}
+
+{% block content %}
+    <main>
+        <h1>Posts</h1>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <span>{{ post.created_at|date:"Y-m-d" }}</span>
+                    <a href="{% url 'view_post' post.id %}">{{ post.title }}</a>
+                </li>
+            {% empty %}
+                <li>No posts available.</li>
+            {% endfor %}
+        </ul>
+    </main>
+{% endblock content %}
