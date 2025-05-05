@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load posts_extras %}
+
 {% block title %}
     {{ post.title }}
 {% endblock title %}
@@ -10,6 +12,6 @@
         <p>Author: {{ post.author.first_name }} {{ post.author.last_name }}</p>
         <p>Published: {{ post.created_at|date:"Y-m-d H:i:s e" }}</p>
         <p>Last Updated: {{ post.updated_at|date:"Y-m-d H:i:s e" }}</p>
-        <div>{{ post.content }}</div>
+        <div class="post-content">{{ post.content|render_markdown }}</div>
     </main>
 {% endblock content %}

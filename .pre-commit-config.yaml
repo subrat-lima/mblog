@@ -1,0 +1,23 @@
+repos:
+- repo: local
+  hooks:
+  - id: py-linter
+    name: Apply ruff linter fixes
+    entry: ruff check --fix .
+    language: system
+    types: [python]
+  - id: py-format
+    name: Apply ruff formatting fixes
+    entry: ruff format .
+    language: system
+    types: [python]
+  - id: dj-linter
+    name: Apply djlint linter check
+    entry: djlint . --lint
+    language: system
+    types: [html]
+  - id: dj-format
+    name: Apply djlint formatting fixes
+    entry: djlint . --reformat
+    language: system
+    types: [html]
