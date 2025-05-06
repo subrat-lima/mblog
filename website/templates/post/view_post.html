@@ -9,9 +9,25 @@
 {% block content %}
     <main>
         <h1>{{ post.title }}</h1>
-        <p>Author: {{ post.author.first_name }} {{ post.author.last_name }}</p>
-        <p>Published: {{ post.created_at|date:"Y-m-d H:i:s e" }}</p>
-        <p>Last Updated: {{ post.updated_at|date:"Y-m-d H:i:s e" }}</p>
+        <p>Author: {{ post.author.get_full_name }}</p>
+        <p>Published: {{ post.created|date:"Y-m-d H:i:s e" }}</p>
+        <p>Last Updated: {{ post.updated|date:"Y-m-d H:i:s e" }}</p>
         <div class="post-content">{{ post.content|render_markdown }}</div>
+        <ul class="comments">
+            {% for comment in comments %}
+                <li class="comment">
+                    <span>Author: {{ comment.user.get_full_name }}</span>
+                    <span>Date: {{ comment.created|date:"Y-m-d H:i:s e" }}</span>
+                    <p>{{ comment.body }}</p>
+                </li>
+            {% empty %}
+                <li>There are no comments yet.</li>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'post_comment' post.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Post comment">
+        </form>
     </main>
 {% endblock content %}

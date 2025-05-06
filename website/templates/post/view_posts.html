@@ -10,7 +10,7 @@
         <ul>
             {% for post in posts %}
                 <li>
-                    <span>{{ post.created_at|date:"Y-m-d" }}</span>
+                    <span>{{ post.created|date:"Y-m-d" }}</span>
                     <a href="{% url 'view_post' post.id %}">{{ post.title }}</a>
                 </li>
             {% empty %}

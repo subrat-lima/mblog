@@ -47,10 +47,10 @@ class TestPost(TestCase):
         self.assertContains(response, "Post Content")
         self.assertContains(response, "First Last")
         self.assertContains(
-            response, self.post.created_at.strftime("%Y-%m-%d %H:%M:%S %Z")
+            response, self.post.created.strftime("%Y-%m-%d %H:%M:%S %Z")
         )
         self.assertContains(
-            response, self.post.updated_at.strftime("%Y-%m-%d %H:%M:%S %Z")
+            response, self.post.updated.strftime("%Y-%m-%d %H:%M:%S %Z")
         )
         # markdown post
         response = self.client.get(f"/posts/{self.post_3.id}/")
@@ -63,10 +63,10 @@ class TestPost(TestCase):
         self.assertContains(response, "<li>list item 2</li>", html=True)
         self.assertContains(response, "First Last")
         self.assertContains(
-            response, self.post_3.created_at.strftime("%Y-%m-%d %H:%M:%S %Z")
+            response, self.post_3.created.strftime("%Y-%m-%d %H:%M:%S %Z")
         )
         self.assertContains(
-            response, self.post_3.updated_at.strftime("%Y-%m-%d %H:%M:%S %Z")
+            response, self.post_3.updated.strftime("%Y-%m-%d %H:%M:%S %Z")
         )
 
     def test_view_post_invalid_post_id(self):
@@ -82,12 +82,80 @@ class TestPost(TestCase):
         self.assertEqual(response.status_code, 200)
         # post 1
         self.assertContains(response, "Post Title")
-        self.assertContains(response, self.post.created_at.strftime("%Y-%m-%d"))
+        self.assertContains(response, self.post.created.strftime("%Y-%m-%d"))
         # post 2
         self.assertContains(response, "Post Title 2")
         self.assertContains(
             response,
-            self.post_2.created_at.strftime("%Y-%m-%d"),
+            self.post_2.created.strftime("%Y-%m-%d"),
         )
         # draft post
         self.assertNotContains(response, "Post Title Draft")
+
+
+class TestComment(TestCase):
+    def setUp(self):
+        self.PASSWORD = "notsecure"
+        self.owner = User.objects.create_user(
+            "owner", password=self.PASSWORD, first_name="First", last_name="Last"
+        )
+        self.post = Post.objects.create(
+            author=self.owner,
+            title="Post Title",
+            slug="post-title",
+            content="Post Content",
+            status="P",
+        )
+        self.draft_post = Post.objects.create(
+            author=self.owner,
+            title="Post Title Draft",
+            slug="post-title-draft",
+            content="Post Content Draft",
+            status="D",
+        )
+
+    def test_post_comment_valid(self):
+        comment = {"body": "sample comment"}
+        self.client.login(username=self.owner.username, password=self.PASSWORD)
+        response = self.client.post(
+            f"/posts/{self.post.id}/comment/", comment, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Post Title")
+        self.assertContains(response, "Post Content")
+        self.assertContains(response, "First Last")
+        self.assertContains(
+            response, self.post.created.strftime("%Y-%m-%d %H:%M:%S %Z")
+        )
+        self.assertContains(
+            response, self.post.updated.strftime("%Y-%m-%d %H:%M:%S %Z")
+        )
+        self.assertContains(response, "sample comment")
+
+    def test_post_comment_no_login(self):
+        comment = {"body": "sample comment"}
+        response = self.client.post(
+            f"/posts/{self.post.id}/comment/", comment, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<h2>Login</h2>", html=True)
+
+    def test_post_comment_get(self):
+        comment = {"body": "sample comment"}
+        self.client.login(username=self.owner.username, password=self.PASSWORD)
+        response = self.client.get(
+            f"/posts/{self.post.id}/comment/", comment, follow=True
+        )
+        self.assertEqual(response.status_code, 405)
+
+    def test_post_comment_invalid(self):
+        # draft post
+        comment = {"body": "sample comment"}
+        self.client.login(username=self.owner.username, password=self.PASSWORD)
+        response = self.client.post(
+            f"/posts/{self.draft_post.id}/comment/", comment, follow=True
+        )
+        self.assertEqual(response.status_code, 404)
+        # invalid post
+        response = self.client.post("/posts/55/comment/", comment, follow=True)
+        self.assertEqual(response.status_code, 404)
