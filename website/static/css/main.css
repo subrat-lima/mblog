@@ -4,32 +4,108 @@
     padding: 0;
 }
 
-nav {
-    margin: 1rem 0;
+body {
+    font-family: sans-serif;
 }
 
-nav a {
-    margin: 0.5rem;
-    padding: 1rem 0.5rem;
-}
-
-nav a:first-child {
-    margin-left: 0;
-}
-
+nav,
 main {
-    padding-left: 0.5rem;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    width: 98%;
+    max-width: 1920px;
+}
+
+nav {
+    display: flex;
+    align-items: center; 
+    /* justify-content: center; */
+}
+
+form {
+    max-width: 600px;
+}
+
+label,
+input {
+    margin: 0.5rem 0;
+}
+
+input {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+button,
+input[type="submit"] {
+    border: 1px solid black;
+    background: none;
+    cursor: pointer;
+    margin: 1.25rem 0;
+    font-family: sans-serif;
 }
 
 li {
     list-style: none;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
+}
+
+h2 {
+    margin: 1.25rem auto;
+}
+
+p + p {
+    margin-top: 1rem;
+}
+
+nav a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: blue;
+}
+
+nav a:first-child {
+    padding-left: 0;
+}
+
+nav .right {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 li a {
     padding: 0 1rem;
 }
 
+form p,
+form label,
+form input {
+    width: 100%;
+}
+
+form ul,
+form .helptext {
+    color: gray;
+    margin: 0.25rem 0;
+}
+
 .post-content {
     margin: 1rem 0;
+}
+
+.logout-form {
+    display: inline;
+}
+
+.logout-form input {
+    margin: 0;
+    border: 0;
+    width: auto;
+    color: blue;
+}
+
+.errorlist {
+    color: red;
 }

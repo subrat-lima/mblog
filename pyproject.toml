@@ -1,6 +1,6 @@
 [project]
 name = "mblog"
-version = "0.0.5"
+version = "0.0.6"
 description = "A micro blog website built using django."
 readme = "README.md"
 requires-python = ">=3.13"
